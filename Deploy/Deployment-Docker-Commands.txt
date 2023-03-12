@@ -1,0 +1,26 @@
+SQL SERVER
+->docker pull mcr.microsoft.com/mssql/server:2017-latest
+->docker network create todo-springboot-sqlserver-net
+->docker images
+->docker network ls
+->docker run -network todo-springboot-sqlserver-net -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Mayank123" -p 1433:1433 --name sqlserver-springboot --hostname sqlserver-springboot -d mcr.microsoft.com/mssql/server:2017-latest
+->docker ps
+->docker exec -it sqlserver-springboot "bash"
+->/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Mayank123"
+-> docker run --network todo-springboot-sqlserver-net --name springboot-container -p 8041:8040 -d sqlserver-springboot
+
+
+RUN JAR
+->docker build -t task-service-docker:latest .
+->docker run -p 8041:8040 task-service-docker
+
+RUN JAR IN NETWORK
+->docker build -t task-service-docker:latest .
+->docker run --network todo-springboot-mysql-net --name task-service -p 8041:8040 -d task-service-docker
+
+MYSQL
+->docker pull mysql:latest
+->docker network create todo-springboot-mysql-net
+->docker run --name mysqldb --network todo-springboot-mysql-net -e MYSQL_ROOT_PASSWORD=Mayank1234 -e MYSQL_DATABASE=SpringDBPractice -e MYSQL_USER=sa -e MYSQL_PASSWORD=Mayank1234 -d mysql:latest
+->docker exec -it a50 bash
+->mysql -usa -pMayank1234

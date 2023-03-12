@@ -1,0 +1,11 @@
+package com.sample.task.service.service;
+
+import com.sample.task.service.bean.Task;
+
+
+public interface ITaskService {
+	
+	public void addTask(Task task);
+	
+	public void removeTaskById(Long id);
+}

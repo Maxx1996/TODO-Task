@@ -1,0 +1,51 @@
+package com.sample.task.service.controller;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.sample.task.service.bean.Task;
+import com.sample.task.service.service.ITaskService;
+
+
+@RestController
+public class TaskController {
+	private final ITaskService taskService;
+
+	public TaskController(ITaskService taskService) {
+		super();
+		this.taskService = taskService;
+	}
+
+	@GetMapping("/tasks")
+	public List<Task> getTasks(){
+		return taskService.getTasks();
+	}
+	
+	@GetMapping("/tasks/{id}")
+	public Task getTasksById(@PathVariable Long id){
+		Optional<Task> task = taskService.getTask(id);
+		return task.isPresent()? task.get() : null;
+	}
+	
+	@GetMapping("/{userId}/tasks")
+	public List<Task> getTasksByUserId(@PathVariable Long userId){
+		return taskService.getTaskssByUserId(userId);
+	}
+	
+	@PostMapping("/tasks")
+	public void addTask(@RequestBody Task task) {
+		taskService.addTask(task);
+	}
+	
+	@DeleteMapping("/tasks/{id}")
+	public void deleteTask(@PathVariable Long id) {
+		taskService.removeTaskById(id);
+	}
+}

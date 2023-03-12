@@ -1,0 +1,53 @@
+package com.sample.user.service.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import com.sample.user.service.bean.Task;
+import com.sample.user.service.bean.User;
+import com.sample.user.service.connector.IUserConnector;
+import com.sample.user.service.repository.UserRepository;
+
+@Service
+public class UserService implements IUserService{
+
+	private UserRepository repository;
+	private IUserConnector userConnector;
+	
+	public UserService(UserRepository repository, IUserConnector userConnector) {
+		super();
+		this.repository = repository;
+		this.userConnector = userConnector;
+	}
+
+	@Override
+	public List<User> getUsers() {
+		return repository.findAll();
+	}
+
+	@Override
+	public Optional<User> getUserById(Long id) {
+		ArrayList<? extends Task> tasks = userConnector.run(id);
+		Optional<User> user = repository.findById(id);
+		if(user.isPresent()) {
+			user.get().setTask((List<Task>)tasks);
+			return user;
+		}
+		return Optional.empty();
+	}
+
+	@Override
+	public void insertOrUpdateUser(User user) {
+		repository.save(user);
+	}
+
+	@Override
+	public void deleteUserById(Long id) {
+		Optional<User> user = getUserById(id);
+		repository.delete(user.get());
+	}
+
+}

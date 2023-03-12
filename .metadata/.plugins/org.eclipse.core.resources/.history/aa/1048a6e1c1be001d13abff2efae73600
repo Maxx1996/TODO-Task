@@ -1,0 +1,9 @@
+package com.sample.user.service.connector;
+
+import java.util.ArrayList;
+import java.util.Optional;
+
+
+public sealed interface IUserConnector permits UserConnector{
+	public ArrayList<E> run(Long id);
+}

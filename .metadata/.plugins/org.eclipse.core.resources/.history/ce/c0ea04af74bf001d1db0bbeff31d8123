@@ -1,0 +1,4 @@
+FROM openjdk:17
+LABEL maintainer="maxx1996"
+ADD target/task-service-snapshot.jar task-service-docker.jar
+ENTRYPOINT ["java", "-jar", "task-service-docker.jar"]

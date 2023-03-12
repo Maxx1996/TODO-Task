@@ -1,0 +1,29 @@
+package com.sample.user.service.connector;
+
+import java.util.ArrayList;
+
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
+import com.sample.user.service.bean.Task;
+import com.sample.user.service.configuration.Configuration;
+
+
+@Component
+public final class UserConnector implements IUserConnector {
+
+	private final Configuration configuration;
+	
+	public UserConnector(Configuration configuration) {
+		super();
+		this.configuration = configuration;
+	}
+
+	public ArrayList<? extends Task> run(Long id) {
+		RestTemplate restTemplate = new RestTemplate();
+		ArrayList<? extends Task> tasks = restTemplate.getForObject(
+				configuration.getUrl() + "/" +id + "/tasks", ArrayList.class);
+		return tasks;
+	}
+
+}

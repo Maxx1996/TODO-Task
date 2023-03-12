@@ -1,0 +1,72 @@
+package com.sample.user.service.service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import com.sample.user.service.bean.Task;
+import com.sample.user.service.bean.User;
+import com.sample.user.service.connector.IUserConnector;
+import com.sample.user.service.repository.UserRepository;
+
+@Service
+public class UserService implements IUserService{
+
+	private UserRepository repository;
+	private IUserConnector userConnector;
+	private Logger logger = LoggerFactory.getLogger(UserService.class);
+	
+	public UserService(UserRepository repository, IUserConnector userConnector) {
+		super();
+		this.repository = repository;
+		this.userConnector = userConnector;
+	}
+
+	@Override
+	public List<User> getUsers() {
+		List<Task> tasks = userConnector.getTasks();
+		List<User> users = repository.findAll();
+//		for (Task task : tasks) {
+//			logger.info("{}", task.getUserId());
+//		}
+//		for (User user : users) {
+//			//logger.info("{}", tasks.get(0).getUserId());
+//			logger.info("{}", user.getId());
+//			Predicate<? super Task> predicate = t -> t.getUserId() == user.getId();
+////			List<Task> ct = tasks.stream().filter(predicate).collect(Collectors.toList());
+////			user.setTask(ct);
+//		}
+		users.forEach(u -> u.setTask(tasks.stream()
+				.filter(t -> t.getUserId() == u.getId())
+				.collect(Collectors.toList())));
+		return users;
+	}
+
+	@Override
+	public Optional<User> getUserById(Long id) {
+		List<Task> tasks = userConnector.getTaskById(id);
+		Optional<User> user = repository.findById(id);
+		if(user.isPresent()) {
+			user.get().setTask(tasks);
+			return user;
+		}
+		return Optional.empty();
+	}
+
+	@Override
+	public void insertOrUpdateUser(User user) {
+		repository.save(user);
+	}
+
+	@Override
+	public void deleteUserById(Long id) {
+		Optional<User> user = getUserById(id);
+		repository.delete(user.get());
+	}
+
+}

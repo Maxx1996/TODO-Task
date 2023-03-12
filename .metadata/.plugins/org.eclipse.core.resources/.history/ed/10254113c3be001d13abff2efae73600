@@ -1,0 +1,5 @@
+package com.sample.user.service.bean;
+
+public class Task {
+
+}

@@ -1,0 +1,10 @@
+package com.sample.user.service.connector;
+
+import java.util.ArrayList;
+
+import com.sample.user.service.bean.Task;
+
+
+public sealed interface IUserConnector permits UserConnector{
+	public ArrayList<? extends Task> run(Long id);
+}

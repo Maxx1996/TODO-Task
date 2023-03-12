@@ -1,0 +1,34 @@
+version: "3.8"
+services:
+  user-service-dc:
+    image: todotasks
+    build: ../UserService
+    restart: always
+    ports:
+      - 8020:8020
+    depends_on:
+      - mysqldockerdb
+    environment:
+      - APP_PORT=8020
+      - APP_NAME=user-service
+  task-service-dc:
+    image: todotasks
+    build: ../TaskService
+    restart: always
+    ports:
+      - 8040:8040
+    depends_on:
+      - mysqldockerdb
+    environment:
+      - APP_PORT=8040
+      - APP_NAME=task-service
+  mysqldockerdb:
+    image: "mysql:latest"
+    restart: always
+    ports: 
+      - 3307:3306
+    environment:
+      MYSQL_DATABASE: SpringDBPractice
+      MYSQL_USER: Mayank1234
+      MYSQL_PASSWORD: Mayank1234
+      MYSQL_ROOT_PASSWORD: Mayank1234

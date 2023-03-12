@@ -1,0 +1,38 @@
+package com.sample.task.service.service;
+
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import com.sample.task.service.bean.Task;
+import com.sample.task.service.repository.TaskRepository;
+
+
+@Service
+public class TaskService implements ITaskService {
+	
+	private final TaskRepository taskRepository;
+
+	public TaskService(TaskRepository taskRepository) {
+		super();
+		this.taskRepository = taskRepository;
+	}
+
+	@Override
+	public void addTask(Task task) {
+		if(task != null)
+			taskRepository.save(task);
+	}
+
+	@Override
+	public void removeTaskById(Long id) {
+		Optional<Task> task = getTask(id);
+		taskRepository.delete(task.get());
+	}
+
+	@Override
+	public Optional<Task> getTask(Long id) {
+		return taskRepository.findById(id);
+	}
+
+}
